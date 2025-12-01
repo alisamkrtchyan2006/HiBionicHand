@@ -1,0 +1,387 @@
+// Prisma Schema for hiBionicHand Platform
+// This is a reference schema - adjust as needed for your specific requirements
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  admin
+  editor
+  user
+}
+
+enum ProductType {
+  upper_limb
+  lower_limb
+}
+
+enum ProductStatus {
+  draft
+  published
+  archived
+}
+
+enum NewsStatus {
+  draft
+  published
+  archived
+}
+
+enum ReviewStatus {
+  pending
+  approved
+  rejected
+}
+
+enum ContactType {
+  phone
+  email
+  address
+  social
+}
+
+enum MediaType {
+  image
+  video
+}
+
+enum StorageType {
+  local
+  s3
+  cloudinary
+}
+
+enum Language {
+  en
+  ru
+  arm
+}
+
+enum SettingType {
+  string
+  number
+  boolean
+  json
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         UserRole @default(user)
+  firstName    String?  @map("first_name")
+  lastName     String?  @map("last_name")
+  avatarUrl    String?  @map("avatar_url")
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  createdProducts Product[] @relation("ProductCreator")
+  authoredNews    News[]    @relation("NewsAuthor")
+  uploadedMedia   Media[]
+
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
+
+model Product {
+  id              String        @id @default(uuid())
+  parentId        String?       @map("parent_id")
+  type            ProductType
+  slug            String        @unique
+  sku             String?
+  status          ProductStatus @default(draft)
+  featuredImageId String?       @map("featured_image_id")
+  createdById     String        @map("created_by")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  // Self-referential relation for hierarchy
+  parent   Product?  @relation("ProductHierarchy", fields: [parentId], references: [id])
+  children Product[] @relation("ProductHierarchy")
+
+  // Relations
+  createdBy     User                 @relation("ProductCreator", fields: [createdById], references: [id])
+  featuredImage Media?               @relation("ProductFeaturedImage", fields: [featuredImageId], references: [id])
+  translations  ProductTranslation[]
+  specs         ProductSpec[]
+  media         ProductMedia[]
+  reviews       Review[]
+
+  @@index([parentId])
+  @@index([type])
+  @@index([status])
+  @@index([slug])
+  @@map("products")
+}
+
+model ProductTranslation {
+  id               String   @id @default(uuid())
+  productId        String   @map("product_id")
+  language         Language
+  name             String
+  description      String?  @db.Text
+  shortDescription String?  @map("short_description") @db.Text
+  metaTitle        String?  @map("meta_title")
+  metaDescription  String?  @map("meta_description") @db.Text
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, language])
+  @@index([productId, language])
+  @@map("product_translations")
+}
+
+model ProductSpec {
+  id           String   @id @default(uuid())
+  productId    String   @map("product_id")
+  specKey      String   @map("spec_key")
+  specValue    String   @map("spec_value") @db.Text
+  displayOrder Int      @default(0) @map("display_order")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@map("product_specs")
+}
+
+model ProductMedia {
+  id           String    @id @default(uuid())
+  productId    String    @map("product_id")
+  mediaId      String    @map("media_id")
+  mediaType    MediaType @map("media_type")
+  displayOrder Int       @default(0) @map("display_order")
+  isPrimary    Boolean   @default(false) @map("is_primary")
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  media   Media   @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([mediaId])
+  @@map("product_media")
+}
+
+model News {
+  id              String     @id @default(uuid())
+  slug            String     @unique
+  featuredImageId String?    @map("featured_image_id")
+  authorId        String     @map("author_id")
+  status          NewsStatus @default(draft)
+  publishedAt     DateTime?  @map("published_at")
+  viewsCount      Int        @default(0) @map("views_count")
+  createdAt       DateTime   @default(now()) @map("created_at")
+  updatedAt       DateTime   @updatedAt @map("updated_at")
+
+  author        User              @relation("NewsAuthor", fields: [authorId], references: [id])
+  featuredImage Media?            @relation("NewsFeaturedImage", fields: [featuredImageId], references: [id])
+  translations  NewsTranslation[]
+
+  @@index([status])
+  @@index([publishedAt])
+  @@index([slug])
+  @@map("news")
+}
+
+model NewsTranslation {
+  id              String   @id @default(uuid())
+  newsId          String   @map("news_id")
+  language        Language
+  title           String
+  content         String   @db.Text
+  excerpt         String?  @db.Text
+  metaTitle       String?  @map("meta_title")
+  metaDescription String?  @map("meta_description") @db.Text
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  news News @relation(fields: [newsId], references: [id], onDelete: Cascade)
+
+  @@unique([newsId, language])
+  @@index([newsId, language])
+  @@map("news_translations")
+}
+
+model Review {
+  id              String       @id @default(uuid())
+  productId       String?      @map("product_id")
+  authorName      String       @map("author_name")
+  authorEmail     String?      @map("author_email")
+  authorAvatarUrl String?      @map("author_avatar_url")
+  rating          Int // 1-5
+  status          ReviewStatus @default(pending)
+  isFeatured      Boolean      @default(false) @map("is_featured")
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+
+  product      Product?            @relation(fields: [productId], references: [id], onDelete: SetNull)
+  translations ReviewTranslation[]
+
+  @@index([productId])
+  @@index([status])
+  @@index([rating])
+  @@map("reviews")
+}
+
+model ReviewTranslation {
+  id        String   @id @default(uuid())
+  reviewId  String   @map("review_id")
+  language  Language
+  title     String?
+  content   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  review Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@unique([reviewId, language])
+  @@index([reviewId, language])
+  @@map("review_translations")
+}
+
+model Partner {
+  id           String   @id @default(uuid())
+  name         String
+  logoId       String?  @map("logo_id")
+  websiteUrl   String?  @map("website_url")
+  displayOrder Int      @default(0) @map("display_order")
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  logo         Media?               @relation("PartnerLogo", fields: [logoId], references: [id])
+  translations PartnerTranslation[]
+
+  @@index([isActive])
+  @@map("partners")
+}
+
+model PartnerTranslation {
+  id          String   @id @default(uuid())
+  partnerId   String   @map("partner_id")
+  language    Language
+  description String?  @db.Text
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  partner Partner @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+
+  @@unique([partnerId, language])
+  @@index([partnerId, language])
+  @@map("partner_translations")
+}
+
+model Contact {
+  id           String      @id @default(uuid())
+  type         ContactType
+  value        String
+  displayOrder Int         @default(0) @map("display_order")
+  isActive     Boolean     @default(true) @map("is_active")
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+
+  translations ContactTranslation[]
+
+  @@index([type])
+  @@index([isActive])
+  @@map("contacts")
+}
+
+model ContactTranslation {
+  id        String   @id @default(uuid())
+  contactId String   @map("contact_id")
+  language  Language
+  label     String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  contact Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  @@unique([contactId, language])
+  @@index([contactId, language])
+  @@map("contact_translations")
+}
+
+model ContactFormSubmission {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String?
+  message   String   @db.Text
+  status    String   @default("new") // new, read, replied, archived
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("contact_form_submissions")
+}
+
+model Media {
+  id               String      @id @default(uuid())
+  filename         String
+  originalFilename String      @map("original_filename")
+  mimeType         String      @map("mime_type")
+  fileSize         Int         @map("file_size")
+  storageType      StorageType @map("storage_type")
+  storagePath      String      @map("storage_path")
+  url              String
+  thumbnailUrl     String?     @map("thumbnail_url")
+  width            Int?
+  height           Int?
+  duration         Int? // For videos (seconds)
+  uploadedById     String      @map("uploaded_by")
+  createdAt        DateTime    @default(now()) @map("created_at")
+  updatedAt        DateTime    @updatedAt @map("updated_at")
+
+  uploadedBy            User           @relation(fields: [uploadedById], references: [id])
+  productFeaturedImages Product[]      @relation("ProductFeaturedImage")
+  newsFeaturedImages    News[]         @relation("NewsFeaturedImage")
+  partnerLogos          Partner[]      @relation("PartnerLogo")
+  productMedia          ProductMedia[]
+
+  @@index([storageType])
+  @@index([uploadedById])
+  @@map("media")
+}
+
+model Setting {
+  id        String      @id @default(uuid())
+  key       String      @unique
+  value     Json // JSONB in PostgreSQL
+  type      SettingType
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @updatedAt @map("updated_at")
+
+  translations SettingTranslation[]
+
+  @@index([key])
+  @@map("settings")
+}
+
+model SettingTranslation {
+  id        String   @id @default(uuid())
+  settingId String   @map("setting_id")
+  language  Language
+  value     String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  setting Setting @relation(fields: [settingId], references: [id], onDelete: Cascade)
+
+  @@unique([settingId, language])
+  @@index([settingId, language])
+  @@map("setting_translations")
+}

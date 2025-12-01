@@ -1,0 +1,21 @@
+# Images Directory
+
+This directory is for storing image assets used throughout the application.
+
+## Structure
+- `/images/` - General images (product images, news images, etc.)
+- `/icons/` - Icon files
+- `/logos/` - Logo files
+
+## Usage
+Images in this directory can be referenced in your code using:
+- Next.js Image component: `/assets/images/your-image.jpg`
+- Regular img tag: `/assets/images/your-image.jpg`
+- CSS: `url('/assets/images/your-image.jpg')`
+
+## Recommended Image Formats
+- **JPG/JPEG** - For photographs and complex images
+- **PNG** - For images with transparency
+- **WebP** - For optimized web images (recommended)
+- **SVG** - For icons and simple graphics
+
