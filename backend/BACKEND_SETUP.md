@@ -20,12 +20,20 @@ cd backend
 touch .env
 ```
 
-Add your database URL:
+Add your database URL (no password needed for local development):
 ```env
-DATABASE_URL="postgresql://user:password@localhost:5432/hibionichand?schema=public"
+DATABASE_URL="postgresql://your_username@localhost:5432/hibionichand?schema=public"
 ```
 
-Or for MySQL:
+Replace `your_username` with your PostgreSQL username (usually your system username).
+
+Or use the setup script which automatically configures this:
+```bash
+cd backend
+./setup-db.sh
+```
+
+For MySQL (if password is required):
 ```env
 DATABASE_URL="mysql://user:password@localhost:3306/hibionichand"
 ```

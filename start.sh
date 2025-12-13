@@ -16,9 +16,16 @@ if [ ! -f "backend/.env" ]; then
 fi
 
 if [ ! -f "frontend/.env.local" ]; then
-    echo -e "${YELLOW}⚠️  Frontend .env.local file not found. Creating from .env.local.example...${NC}"
-    cp frontend/.env.local.example frontend/.env.local
-    echo -e "${YELLOW}⚠️  Please edit frontend/.env.local if needed!${NC}\n"
+    if [ -f "frontend/.env.local.example" ]; then
+        echo -e "${YELLOW}⚠️  Frontend .env.local file not found. Creating from .env.local.example...${NC}"
+        cp frontend/.env.local.example frontend/.env.local
+        echo -e "${YELLOW}⚠️  Please edit frontend/.env.local if needed!${NC}\n"
+    else
+        echo -e "${YELLOW}⚠️  Frontend .env.local file not found. Creating minimal .env.local...${NC}"
+        echo "NEXT_PUBLIC_API_URL=http://localhost:3000/api/v1" > frontend/.env.local
+        echo -e "${GREEN}✅ Created frontend/.env.local with default API URL${NC}"
+        echo -e "${YELLOW}💡 Note: SMTP credentials are optional. Contact forms will work without them.${NC}\n"
+    fi
 fi
 
 # Start backend

@@ -121,7 +121,15 @@ export default function ContactPage() {
         throw new Error(errorMsg + details);
       }
 
-      setSuccess(true);
+      // Email was sent successfully
+      if (data.emailSent) {
+        setSuccess(true);
+        setError(null);
+      } else {
+        setSuccess(true);
+        setError(null);
+      }
+
       setFormData({
         name: '',
         email: '',
