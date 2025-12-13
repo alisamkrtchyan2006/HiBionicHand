@@ -29,21 +29,21 @@
     "noData": "No data available"
   },
   "home": {
-    "title": "Redefining Human Potential",
-    "slogan": "Experience the future of bionic technology. Our advanced prosthetic hands combine cutting-edge AI, neural interfaces, and precision engineering to restore natural movement and touch.",
+    "title": "RECLAIM YOUR FREEDOM",
+    "slogan": "HI.BIONIC.HAND company is engaged in the design and production of bionic limb prostheses.",
     "exploreProducts": "Explore Products",
     "revolutionaryTech": "Revolutionary Technology",
-    "revolutionaryTechDesc": "Cutting-edge features that set our bionic hands apart from the rest",
+    "revolutionaryTechDesc": "Advanced engineering solutions for high-precision and highly functional bionic hands.",
     "userReviews": "What Our Users Say",
     "userReviewsDesc": "Real stories from people whose lives have been transformed",
     "meetTeam": "Meet Our Team",
-    "meetTeamDesc": "The brilliant minds behind our innovative bionic technology"
+    "meetTeamDesc": "The talented team behind our innovative bionic technology"
   },
   "tech": {
-    "neuralInterface": "Advanced Neural Interface",
-    "neuralInterfaceDesc": "Direct neural connection for intuitive control and natural movement",
+    "neuralInterface": "Neural Interface",
+    "neuralInterfaceDesc": "The direct neural interface enables the user to control the device intuitively and perform natural, lifelike movements, establishing an immediate connection between the human nervous system and the bionic hand.",
     "precisionSensors": "Precision Sensors",
-    "precisionSensorsDesc": "High-resolution tactile feedback for realistic touch sensation",
+    "precisionSensorsDesc": "Highly sensitive touch sensors that deliver accurate feedback, allowing the user to feel touch force, pressure, and surface differences in a natural, realistic way.",
     "aiLearning": "AI-Powered Learning",
     "aiLearningDesc": "Machine learning adapts to your unique movement patterns",
     "lightweight": "Lightweight Design",
@@ -74,16 +74,30 @@
     "researchDirectorBio": "Leading cutting-edge research in bionic technology and prosthetics."
   },
   "about": {
-    "title": "About hiBionicHand",
+    "title": "About HI.BIONIC.HAND",
     "subtitle": "Transforming lives through innovative bionic technology",
     "history": "Our History",
-    "historyDesc": "Founded in 2018, hiBionicHand emerged from a simple yet powerful vision: to restore natural movement and touch to those who have lost limbs. What started as a research project in a university lab has grown into a global leader in bionic prosthetic technology.",
+    "historyDesc": "HI.BIONIC.HAND is a company engaged in the design and production of bionic limb prostheses: The idea was born after the 2016 Artsakh war, with the vision of helping the large number of injured people who had undergone amputations.",
     "purpose": "Our Purpose",
     "purposeDesc": "We believe that losing a limb shouldn't mean losing the ability to live life to its fullest. Our purpose is to empower individuals by restoring not just function, but confidence, independence, and hope.",
     "mission": "Our Mission",
     "missionDesc": "To revolutionize prosthetic technology through cutting-edge innovation, making advanced bionic solutions accessible to everyone who needs them.",
     "team": "Meet Our Team",
     "teamDesc": "Our diverse team of engineers, scientists, designers, and medical professionals work together to create life-changing solutions."
+  },
+  "milestones": {
+    "nextGen": "Returning Freedom with HI.BIONIC.HAND",
+    "nextGenDesc": "HI.BIONIC.HAND multifunctional bionic prostheses are already in use and are helping patients reclaim their freedom",
+    "launch": "A Long Journey Toward Implementation",
+    "launchDesc": "It took many years of work to implement the idea and bring it to life. At that time, there was still a lack of necessary equipment and comfortable working conditions, but there was a clear goal, and experiments were carried out in order to achieve and realize it.",
+    "expansion": "Company Foundation and Early Development",
+    "expansionDesc": "The HI.BIONIC.HAND company had already been established, and work was underway to present the first model.",
+    "trials": "The First EMG-Controlled Prototype",
+    "trialsDesc": "The first prototype model that performed one action at the command of one EMG sensor.",
+    "prototype": "From Production to Testing: HBH-1",
+    "prototypeDesc": "The first production model, HBH-1, entered the testing phase.",
+    "foundation": "International Quality Recognition: ISO 13485",
+    "foundationDesc": "HI.BIONIC.HAND received the international quality management certification ISO 13485. This certification is awarded to companies engaged in the production of medical devices, where quality and safety comply with international standards and meet the highest requirements."
   },
   "products": {
     "title": "Our Products",

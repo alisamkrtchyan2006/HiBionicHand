@@ -21,6 +21,7 @@ import {
   Star as StarIcon,
   People as PeopleIcon,
 } from '@mui/icons-material';
+import ImageRotator from '@/components/ImageRotator';
 
 // Placeholder dummy data
 const revolutionaryTech = [
@@ -320,6 +321,9 @@ export default function HomePage() {
                       zIndex: 1,
                       animation: 'float 6s ease-in-out infinite',
                       boxShadow: '0 0 80px rgba(255, 255, 255, 0.3)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
                     }}
                   >
                     <Box
@@ -328,13 +332,28 @@ export default function HomePage() {
                         top: '50%',
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
-                        fontSize: '8rem',
-                        filter: 'drop-shadow(0 15px 30px rgba(0,0,0,0.4))',
-                        animation: 'float 4s ease-in-out infinite',
                         zIndex: 2,
+                        width: '100%',
+                        height: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                       }}
                     >
-                      🤖
+                      <ImageRotator
+                        baseURL="https://s3-us-west-2.amazonaws.com/s.cdpn.io/106114/"
+                        spriteSheets={{
+                          mario: {
+                            prefix: 'img',
+                            type: '.png',
+                            data: [
+                              { file: 'mario2.json', size: 10 },
+                              { file: 'mario3.json', size: 10 },
+                            ],
+                          },
+                        }}
+                        imageName="mario"
+                      />
                     </Box>
                   </Box>
                 </Box>

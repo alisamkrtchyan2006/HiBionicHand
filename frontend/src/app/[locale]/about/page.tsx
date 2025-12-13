@@ -11,6 +11,8 @@ import {
   Avatar,
   Paper,
   Chip,
+  Link,
+  Button,
 } from '@mui/material';
 import {
   History as HistoryIcon,
@@ -51,13 +53,12 @@ const teamMembers = [
 ];
 
 const milestones = [
-  { year: '2018', titleKey: 'milestones.foundation', descKey: 'milestones.foundationDesc' },
-  { year: '2019', titleKey: 'milestones.prototype', descKey: 'milestones.prototypeDesc' },
-  { year: '2020', titleKey: 'milestones.trials', descKey: 'milestones.trialsDesc' },
-  { year: '2021', titleKey: 'milestones.launch', descKey: 'milestones.launchDesc' },
-  { year: '2022', titleKey: 'milestones.expansion', descKey: 'milestones.expansionDesc' },
-  { year: '2023', titleKey: 'milestones.ai', descKey: 'milestones.aiDesc' },
-  { year: '2024', titleKey: 'milestones.nextGen', descKey: 'milestones.nextGenDesc' },
+  { year: '2020', titleKey: 'milestones.launch' },
+  { year: '2021', titleKey: 'milestones.expansion'},
+  { year: '2022', titleKey: 'milestones.trials', descKey: 'milestones.trialsDesc', linkUrl: 'https://fb.watch/DZeuUPvBNd/?' },
+  { year: '2023', titleKey: 'milestones.prototype', descKey: 'milestones.prototypeDesc', linkUrl: 'https://m.facebook.com/story.php?story_fbid=pfbid02Y4zWW3mYGMp4u6LKiuRgRK29NvzzC6fMNHRpVLSWR9Pa6jiKs4SArWs5wsUJYeyHl&id=100084918172003' },
+  { year: '2024', titleKey: 'milestones.foundation', descKey: 'milestones.foundationDesc', linkUrl: 'https://m.facebook.com/story.php?story_fbid=pfbid06nX975j7PSWxy4hrZDLPFBsBFcPB6rQSPUwHRVEeigGCPDeBMgZQY5H8GWJCx2Tfl&id=100084918172003' },
+  { year: '2025', titleKey: 'milestones.nextGen', descKey: 'milestones.nextGenDesc', linkUrl: 'https://fb.watch/DZf1C-hlMv/?' }
 ];
 
 export default function AboutPage() {
@@ -175,9 +176,27 @@ export default function AboutPage() {
                     <Typography variant="h6" fontWeight={600} gutterBottom>
                       {t(milestone.titleKey)}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                       {t(milestone.descKey)}
                     </Typography>
+                    <Link
+                      href={milestone.linkUrl}
+                      sx={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        fontSize: '0.875rem',
+                        fontWeight: 600,
+                        color: 'primary.main',
+                        textDecoration: 'none',
+                        mt: 1,
+                        '&:hover': {
+                          textDecoration: 'underline',
+                          color: 'primary.dark',
+                        },
+                      }}
+                    >
+                      {t('common.readMore')} →
+                    </Link>
                   </CardContent>
                 </Card>
               </Grid>

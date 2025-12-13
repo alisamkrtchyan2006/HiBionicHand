@@ -104,7 +104,23 @@ export default function ContactPage() {
     setSuccess(false);
 
     try {
-      await apiClient.post('/contacts/submit', formData);
+      // Send to Next.js API route which will email tamaramakrtchyan78@gmail.com
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        const errorMsg = data.error || 'Failed to send message';
+        const details = data.details ? ` ${data.details}` : '';
+        throw new Error(errorMsg + details);
+      }
+
       setSuccess(true);
       setFormData({
         name: '',
@@ -114,7 +130,7 @@ export default function ContactPage() {
         message: '',
       });
     } catch (err: any) {
-      setError(err.response?.data?.message || err.message || 'Failed to send message');
+      setError(err.message || 'Failed to send message');
     } finally {
       setLoading(false);
     }
@@ -186,7 +202,7 @@ export default function ContactPage() {
               )}
 
               {error && (
-                <Alert severity="error" sx={{ mb: 3 }}>
+                <Alert severity="error" sx={{ mb: 3, whiteSpace: 'pre-line' }}>
                   {error}
                 </Alert>
               )}
