@@ -42,8 +42,15 @@ export default function AdminDashboard() {
   });
 
   useEffect(() => {
+    // Check if user is authenticated
+    const token = localStorage.getItem('token');
+    if (!token) {
+      // Redirect to login if no token
+      router.push('/admin/login');
+      return;
+    }
     fetchStats();
-  }, []);
+  }, [router]);
 
   const fetchStats = async () => {
     try {

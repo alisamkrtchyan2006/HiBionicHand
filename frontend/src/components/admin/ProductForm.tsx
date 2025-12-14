@@ -132,21 +132,46 @@ export default function ProductForm({
     setSpecs(updated);
   };
 
+  const isValidUUID = (value: string): boolean => {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    return uuidRegex.test(value);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
+      // Validate translations
+      const validTranslations = translations.filter((t) => t.name);
+      if (validTranslations.length === 0) {
+        setError('At least one translation with a name is required');
+        setLoading(false);
+        return;
+      }
+
+      // Validate UUID fields
+      if (parentId && !isValidUUID(parentId)) {
+        setError('Parent Product ID must be a valid UUID or left empty');
+        setLoading(false);
+        return;
+      }
+
+      if (featuredImageId && !isValidUUID(featuredImageId)) {
+        setError('Featured Image ID must be a valid UUID or left empty');
+        setLoading(false);
+        return;
+      }
+
       const payload = {
-        // Remove categoryId as it doesn't exist in schema
-        parentId: parentId || undefined,
+        parentId: parentId && isValidUUID(parentId) ? parentId : undefined,
         type,
         slug: slug || undefined,
         sku: sku || undefined,
         status,
-        featuredImageId: featuredImageId || undefined,
-        translations: translations.filter((t) => t.name).map((t) => ({
+        featuredImageId: featuredImageId && isValidUUID(featuredImageId) ? featuredImageId : undefined,
+        translations: validTranslations.map((t) => ({
           language: t.language,
           name: t.name,
           description: t.description || undefined,
@@ -238,6 +263,8 @@ export default function ProductForm({
                 label="Parent Product ID"
                 value={parentId}
                 onChange={(e) => setParentId(e.target.value)}
+                helperText="Leave empty if none. Must be a valid UUID format (e.g., 550e8400-e29b-41d4-a716-446655440000)"
+                error={parentId !== '' && !isValidUUID(parentId)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -246,6 +273,8 @@ export default function ProductForm({
                 label="Featured Image ID"
                 value={featuredImageId}
                 onChange={(e) => setFeaturedImageId(e.target.value)}
+                helperText="Leave empty if none. Must be a valid UUID format (e.g., 550e8400-e29b-41d4-a716-446655440000)"
+                error={featuredImageId !== '' && !isValidUUID(featuredImageId)}
               />
             </Grid>
           </Grid>

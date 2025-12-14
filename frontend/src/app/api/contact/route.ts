@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
 
       await resend.emails.send({
         from: 'onboarding@resend.dev', // You can change this after verifying your domain
-        to: 'delivered@resend.dev', // Temporary test email
+        to: 'alisamkrtchyan91@gmail.com', // Temporary test email
         subject: subject || `Contact Form Submission from ${name}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
